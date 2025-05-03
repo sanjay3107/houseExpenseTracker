@@ -1,0 +1,180 @@
+/* Enterprise Theme for House Expense Tracker
+   A professional, modern UI theme with consistent colors and styling */
+
+:root {
+  --primary-color: #4361ee;
+  --primary-light: #eef2ff;
+  --secondary-color: #6c757d;
+  --success-color: #2ecc71;
+  --info-color: #3498db;
+  --warning-color: #f39c12;
+  --danger-color: #e74c3c;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+  --body-bg: #f9fafb;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+  --transition-speed: 0.15s;
+}
+
+/* Base styles */
+body {
+  background-color: var(--body-bg);
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Card enhancements */
+.card {
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+  border-radius: 0.5rem;
+  border: none;
+  box-shadow: var(--card-shadow);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+/* Button styling */
+.btn {
+  border-radius: 0.375rem;
+  transition: all var(--transition-speed);
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: #3050d8;
+  border-color: #3050d8;
+}
+
+.btn-outline-primary {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Page headers */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+}
+
+.page-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+/* Table styling */
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table thead th {
+  background-color: var(--light-color);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(67, 97, 238, 0.03);
+}
+
+/* Form controls */
+.form-control {
+  border-radius: 0.375rem;
+  border: 1px solid #dce0e5;
+  padding: 0.5rem 0.75rem;
+  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+}
+
+/* Alert customization */
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Badge styling */
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  padding: 0.4em 0.7em;
+}
+
+/* Custom dashboard styles */
+.dashboard-card-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.dashboard-card-label {
+  font-size: 0.875rem;
+  color: var(--secondary-color);
+}
+
+/* Empty state styling */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(to bottom, rgba(67, 97, 238, 0.03), rgba(67, 97, 238, 0.07));
+  border-radius: 0.5rem;
+  border: 1px dashed rgba(67, 97, 238, 0.3);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  color: rgba(67, 97, 238, 0.5);
+  margin-bottom: 1rem;
+}
+
+/* Loading spinner */
+.loading-spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  .dashboard-card-value {
+    font-size: 1.5rem;
+  }
+}

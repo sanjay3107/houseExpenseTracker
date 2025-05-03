@@ -1,0 +1,180 @@
+/* Calculator Components - Enterprise Styling */
+
+.calculator-container {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.calculator-container .card {
+  border-radius: 0.5rem;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.calculator-container .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.calculator-container .card-header {
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.calculator-container .card-body {
+  padding: 1.5rem;
+}
+
+/* Stats Cards */
+.stat-card {
+  border-radius: 0.5rem;
+  background: white;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  height: 100%;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+}
+
+.stat-icon i {
+  font-size: 1.5rem;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* Gradient backgrounds */
+.bg-gradient-blue {
+  background: linear-gradient(135deg, #f8f9fa, #e5f4ff);
+}
+
+.bg-gradient-green {
+  background: linear-gradient(135deg, #f8f9fa, #e9f7ef);
+}
+
+.bg-gradient-purple {
+  background: linear-gradient(135deg, #f8f9fa, #f0e7ff);
+}
+
+/* Table styling */
+.calculator-container .table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.calculator-container .table thead th {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.calculator-container .table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.01);
+}
+
+/* Forms styling */
+.calculator-container .form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.calculator-container .form-control,
+.calculator-container .form-select {
+  border-radius: 0.5rem;
+  border: 1px solid #dee2e6;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s;
+}
+
+.calculator-container .form-control:focus,
+.calculator-container .form-select:focus {
+  border-color: #4361ee;
+  box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.1);
+}
+
+/* Timeline visualization */
+.loan-timeline {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.timeline-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 2rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.timeline-marker:hover {
+  transform: translateY(-5px);
+}
+
+.timeline-year {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-dot {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsiveness */
+@media (max-width: 767.98px) {
+  .calculator-container .card {
+    margin-bottom: 1rem;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+  
+  .loan-timeline {
+    padding: 0.5rem 0;
+  }
+  
+  .timeline-marker {
+    margin-right: 1.5rem;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
