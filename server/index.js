@@ -20,8 +20,11 @@ app.use(express.json());
 // CORS configuration for production
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-    ? ['https://house-expense-tracker.vercel.app', 'https://house-expense-app.netlify.app']
+    ? [
+        'https://house-expense-tracker.vercel.app'
+      ]
     : 'http://localhost:5178',
+  credentials: true, // Allow cookies and authentication headers
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
