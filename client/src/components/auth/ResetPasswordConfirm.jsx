@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert, Container, Row, Col } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'animate.css';
 
 // Get Supabase credentials directly
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -76,9 +78,17 @@ const ResetPasswordConfirm = () => {
       
       console.log('Password updated successfully:', data);
 
+      // Set success message
       setMessage('Password has been reset successfully!');
+      setLoading(false);
+      
+      // Clear form fields
+      setPassword('');
+      setConfirmPassword('');
+      
+      // Show success message for 3 seconds, then redirect to login
       setTimeout(() => {
-        navigate('/login');
+        navigate('/login', { state: { message: 'Your password has been reset. Please log in with your new password.' } });
       }, 3000);
     } catch (error) {
       setError(error.message || 'Failed to reset password');
@@ -95,8 +105,21 @@ const ResetPasswordConfirm = () => {
           <Card className="shadow-sm">
             <Card.Body className="p-4">
               <h2 className="text-center mb-4">Reset Your Password</h2>
-              {error && <Alert variant="danger">{error}</Alert>}
-              {message && <Alert variant="success">{message}</Alert>}
+              {error && (
+                <Alert variant="danger" className="animate__animated animate__fadeIn">
+                  <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                  {error}
+                </Alert>
+              )}
+              {message && (
+                <Alert variant="success" className="animate__animated animate__fadeIn">
+                  <i className="bi bi-check-circle-fill me-2"></i>
+                  {message}
+                  <div className="mt-2 small text-muted">
+                    Redirecting to login page in a few seconds...
+                  </div>
+                </Alert>
+              )}
               
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
