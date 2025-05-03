@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert, Container, Row, Col } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { supabase } from '../../config/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+// Get Supabase credentials directly
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 const ResetPasswordConfirm = () => {
   const [password, setPassword] = useState('');
@@ -12,12 +16,20 @@ const ResetPasswordConfirm = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check if we have a token in the URL
+  // Extract token from URL
+  const [accessToken, setAccessToken] = useState(null);
+  
   useEffect(() => {
-    // Supabase automatically detects the token in the URL when the page loads
-    // We just need to check if it's there
-    const hash = location.hash;
-    if (!hash || !hash.includes('access_token')) {
+    // Extract token from URL hash
+    const hash = location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const token = params.get('access_token');
+    
+    if (token) {
+      console.log('Token found in URL');
+      setAccessToken(token);
+    } else {
+      console.error('No token found in URL hash');
       setError('No reset token found in URL. Please request a new password reset.');
     }
   }, [location]);
@@ -42,16 +54,27 @@ const ResetPasswordConfirm = () => {
     }
 
     try {
-      // Direct approach to update password
-      const { error } = await supabase.auth.updateUser({ password });
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+      
+      console.log('Attempting password reset with token');
+      
+      // Create a fresh Supabase client and pass the token directly
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+      
+      // Update the user's password with the token
+      const { data, error } = await supabase.auth.updateUser(
+        { password },
+        { accessToken: accessToken }
+      );
       
       if (error) {
         console.error('Password update error:', error);
         throw error;
       }
       
-      // Log the success for debugging
-      console.log('Password updated successfully');
+      console.log('Password updated successfully:', data);
 
       setMessage('Password has been reset successfully!');
       setTimeout(() => {
