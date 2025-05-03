@@ -51,6 +51,7 @@ We've already prepared the necessary configuration files:
    - `SUPABASE_URL`: Your Supabase URL
    - `SUPABASE_KEY`: Your Supabase key
    - `JWT_SECRET`: A secure random string for JWT token generation
+   - `CLIENT_URL`: Your frontend production URL (e.g., 'https://house-expense-tracker.netlify.app')
 
 3. **Deploy** and Render will build and start your application.
 
