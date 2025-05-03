@@ -10,9 +10,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Add options to help with connectivity issues
 const options = {
   auth: {
-    persistSession: false,
+    persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: false
+    detectSessionInUrl: true,
+    flowType: 'pkce',
+    storageKey: 'supabase-auth'
   },
   global: {
     headers: {
@@ -27,7 +29,7 @@ const options = {
         ...fetchOptions,
         mode: 'cors',
         cache: 'no-cache',
-        credentials: 'same-origin',
+        credentials: 'include', // Changed from 'same-origin' to 'include' to allow cross-origin cookies
       };
       return fetch(url, customFetchOptions);
     }
