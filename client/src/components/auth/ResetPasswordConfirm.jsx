@@ -14,10 +14,23 @@ const ResetPasswordConfirm = () => {
 
   // Extract token from URL if available
   useEffect(() => {
-    // The URL will contain the access_token and type parameters
+    // Check for token in URL hash (this is how Supabase delivers it)
     const hashParams = new URLSearchParams(location.hash.substring(1));
-    if (!hashParams.get('access_token')) {
+    const token = hashParams.get('access_token');
+    
+    if (!token) {
       setError('No reset token found in URL. Please request a new password reset.');
+    } else {
+      // Set the session in Supabase to use the token
+      const setSession = async () => {
+        try {
+          // This tells Supabase to use the token from the URL
+          await supabase.auth.getSession();
+        } catch (err) {
+          console.error('Error setting session:', err);
+        }
+      };
+      setSession();
     }
   }, [location]);
 
@@ -41,8 +54,9 @@ const ResetPasswordConfirm = () => {
     }
 
     try {
-      // The token is already in the URL hash fragment and Supabase will pick it up
-      const { error } = await supabase.auth.updateUser({
+      // Supabase will automatically use the token from the URL
+      // when updateUser is called after getSession() has processed the URL
+      const { data, error } = await supabase.auth.updateUser({
         password
       });
 

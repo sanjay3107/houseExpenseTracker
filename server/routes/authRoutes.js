@@ -149,4 +149,6 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+// Password reset confirmation is handled directly by Supabase in the frontend
+
 module.exports = router;
