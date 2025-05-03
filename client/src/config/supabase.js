@@ -12,9 +12,10 @@ const options = {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: true,
+    detectSessionInUrl: true, // This is critical for password reset flows
     flowType: 'pkce',
-    storageKey: 'supabase-auth'
+    storageKey: 'supabase-auth',
+    debug: true // Enable debug mode to see authentication logs
   },
   global: {
     headers: {

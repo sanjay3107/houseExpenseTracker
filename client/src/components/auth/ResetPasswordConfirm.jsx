@@ -12,25 +12,13 @@ const ResetPasswordConfirm = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Extract token from URL if available
+  // Check if we have a token in the URL
   useEffect(() => {
-    // Check for token in URL hash (this is how Supabase delivers it)
-    const hashParams = new URLSearchParams(location.hash.substring(1));
-    const token = hashParams.get('access_token');
-    
-    if (!token) {
+    // Supabase automatically detects the token in the URL when the page loads
+    // We just need to check if it's there
+    const hash = location.hash;
+    if (!hash || !hash.includes('access_token')) {
       setError('No reset token found in URL. Please request a new password reset.');
-    } else {
-      // Set the session in Supabase to use the token
-      const setSession = async () => {
-        try {
-          // This tells Supabase to use the token from the URL
-          await supabase.auth.getSession();
-        } catch (err) {
-          console.error('Error setting session:', err);
-        }
-      };
-      setSession();
     }
   }, [location]);
 
@@ -54,15 +42,16 @@ const ResetPasswordConfirm = () => {
     }
 
     try {
-      // Supabase will automatically use the token from the URL
-      // when updateUser is called after getSession() has processed the URL
-      const { data, error } = await supabase.auth.updateUser({
-        password
-      });
-
+      // Direct approach to update password
+      const { error } = await supabase.auth.updateUser({ password });
+      
       if (error) {
+        console.error('Password update error:', error);
         throw error;
       }
+      
+      // Log the success for debugging
+      console.log('Password updated successfully');
 
       setMessage('Password has been reset successfully!');
       setTimeout(() => {
