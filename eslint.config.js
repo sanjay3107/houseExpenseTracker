@@ -1,17 +1,19 @@
 import js from '@eslint/js';
-import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
-import reactJsxRuntime from 'eslint-plugin-react/configs/jsx-runtime.js';
-import reactHooks from 'eslint-plugin-react-hooks/recommended.js';
-import jsxA11y from 'eslint-plugin-jsx-a11y/recommended.js';
-import prettier from 'eslint-config-prettier';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
+import prettierConfig from 'eslint-config-prettier';
 
 export default [
   js.configs.recommended,
-  reactRecommended,
-  reactJsxRuntime,
-  reactHooks,
-  jsxA11y,
-  prettier,
+  {
+    plugins: {
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin,
+      'jsx-a11y': jsxA11yPlugin
+    }
+  },
+  prettierConfig,
   {
     languageOptions: {
       ecmaVersion: 'latest',
