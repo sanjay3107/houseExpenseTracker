@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post(API_ENDPOINTS.AUTH.REGISTER, {
         email,
         password,
-        name
+        name,
       });
       return { data: response.data, error: null };
     } catch (err) {
@@ -39,21 +39,21 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       const response = await axios.post(API_ENDPOINTS.AUTH.LOGIN, {
         email,
-        password
+        password,
       });
-      
+
       const { user, session } = response.data;
-      
+
       // Set auth state
       setCurrentUser(user);
       setSession(session);
-      
+
       // Store token in localStorage for persistence
       localStorage.setItem('supabaseToken', session.access_token);
-      
+
       // Set authorization header for all future requests
       axios.defaults.headers.common['Authorization'] = `Bearer ${session.access_token}`;
-      
+
       return { data: response.data, error: null };
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
@@ -66,17 +66,17 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       await axios.post(API_ENDPOINTS.AUTH.LOGOUT);
-      
+
       // Clear auth state
       setCurrentUser(null);
       setSession(null);
-      
+
       // Remove token from localStorage
       localStorage.removeItem('supabaseToken');
-      
+
       // Remove authorization header
       delete axios.defaults.headers.common['Authorization'];
-      
+
       return { error: null };
     } catch (err) {
       setError(err.response?.data?.message || 'Logout failed');
@@ -85,11 +85,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Reset password
-  const resetPassword = async (email) => {
+  const resetPassword = async email => {
     try {
       setError(null);
       const response = await axios.post(API_ENDPOINTS.AUTH.RESET_PASSWORD, {
-        email
+        email,
       });
       return { data: response.data, error: null };
     } catch (err) {
@@ -103,23 +103,23 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       try {
         setLoading(true);
-        
+
         // Check for token in localStorage
         const token = localStorage.getItem('supabaseToken');
-        
+
         if (token) {
           // Set the authorization header
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          
+
           // Verify token with backend
           const response = await axios.post(API_ENDPOINTS.AUTH.VERIFY_TOKEN, {
-            token
+            token,
           });
           setCurrentUser(response.data);
-          
+
           // Recreate session object
           setSession({
-            access_token: token
+            access_token: token,
           });
         }
       } catch (err) {
@@ -131,7 +131,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
       }
     };
-    
+
     loadUser();
   }, []);
 
@@ -145,14 +145,10 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     resetPassword,
-    setError
+    setError,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };
 
 export default AuthContext;

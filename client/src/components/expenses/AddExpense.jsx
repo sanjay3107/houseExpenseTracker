@@ -13,46 +13,46 @@ const AddExpense = () => {
     description: '',
     date: new Date().toISOString().split('T')[0],
     paymentMethod: 'Cash',
-    receipt: ''
+    receipt: '',
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     const { name, value } = e.target;
     setExpense(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    
+
     try {
       setLoading(true);
       setError(null);
-      
+
       // Validate amount
       if (isNaN(expense.amount) || parseFloat(expense.amount) <= 0) {
         setError('Please enter a valid amount greater than zero.');
         setLoading(false);
         return;
       }
-      
+
       // Convert amount to number and camelCase to snake_case for Supabase
       const formattedExpense = {
         ...expense,
         amount: parseFloat(expense.amount),
-        payment_method: expense.paymentMethod // Convert camelCase to snake_case for Supabase
+        payment_method: expense.paymentMethod, // Convert camelCase to snake_case for Supabase
       };
-      
+
       // Remove the camelCase property to avoid duplication
       delete formattedExpense.paymentMethod;
-      
+
       await axios.post(API_ENDPOINTS.EXPENSES.ALL, formattedExpense);
-      
+
       setLoading(false);
       navigate('/expenses');
     } catch (err) {
@@ -67,9 +67,9 @@ const AddExpense = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>Add New Expense</h1>
       </div>
-      
+
       {error && <Alert variant="danger">{error}</Alert>}
-      
+
       <Card>
         <Card.Body>
           <Form onSubmit={handleSubmit}>
@@ -93,7 +93,7 @@ const AddExpense = () => {
                   </Form.Select>
                 </Form.Group>
               </Col>
-              
+
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Amount (₹)</Form.Label>
@@ -109,7 +109,7 @@ const AddExpense = () => {
                   />
                 </Form.Group>
               </Col>
-              
+
               <Col md={12} className="mb-3">
                 <Form.Group>
                   <Form.Label>Description</Form.Label>
@@ -123,7 +123,7 @@ const AddExpense = () => {
                   />
                 </Form.Group>
               </Col>
-              
+
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Date</Form.Label>
@@ -136,7 +136,7 @@ const AddExpense = () => {
                   />
                 </Form.Group>
               </Col>
-              
+
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Payment Method</Form.Label>
@@ -154,7 +154,7 @@ const AddExpense = () => {
                   </Form.Select>
                 </Form.Group>
               </Col>
-              
+
               <Col md={12} className="mb-3">
                 <Form.Group>
                   <Form.Label>Receipt URL (Optional)</Form.Label>
@@ -168,21 +168,17 @@ const AddExpense = () => {
                 </Form.Group>
               </Col>
             </Row>
-            
+
             <div className="d-flex justify-content-end mt-3">
-              <Button 
-                variant="secondary" 
-                className="me-2" 
+              <Button
+                variant="secondary"
+                className="me-2"
                 onClick={() => navigate('/expenses')}
                 disabled={loading}
               >
                 Cancel
               </Button>
-              <Button 
-                variant="primary" 
-                type="submit"
-                disabled={loading}
-              >
+              <Button variant="primary" type="submit" disabled={loading}>
                 {loading ? 'Adding...' : 'Add Expense'}
               </Button>
             </div>

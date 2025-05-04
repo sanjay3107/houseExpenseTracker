@@ -4,19 +4,22 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
   return (
-    <footer className="bg-dark text-white py-3 mt-auto" style={{
-      background: 'linear-gradient(to right, #1a2a3a, #3a4db9)',
-      boxShadow: '0 -2px 10px rgba(0,0,0,0.2)',
-      borderTop: '1px solid rgba(255,255,255,0.1)',
-      marginLeft: 0,
-      marginRight: 0,
-      width: '100vw',
-      position: 'relative',
-      left: '0',
-      right: '0'
-    }}>
+    <footer
+      className="bg-dark text-white py-3 mt-auto"
+      style={{
+        background: 'linear-gradient(to right, #1a2a3a, #3a4db9)',
+        boxShadow: '0 -2px 10px rgba(0,0,0,0.2)',
+        borderTop: '1px solid rgba(255,255,255,0.1)',
+        marginLeft: 0,
+        marginRight: 0,
+        width: '100vw',
+        position: 'relative',
+        left: '0',
+        right: '0',
+      }}
+    >
       <Container fluid>
         <Row className="py-3">
           <Col md={6} className="text-center text-md-start">

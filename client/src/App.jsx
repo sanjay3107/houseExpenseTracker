@@ -30,7 +30,10 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="App d-flex flex-column" style={{ minHeight: '100vh', width: '100%', overflow: 'hidden' }}>
+        <div
+          className="App d-flex flex-column"
+          style={{ minHeight: '100vh', width: '100%', overflow: 'hidden' }}
+        >
           <Header />
           <div className="flex-grow-1 w-100">
             <Container fluid className="py-4 px-0">
@@ -41,7 +44,7 @@ function App() {
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/reset-password-confirm" element={<ResetPasswordConfirm />} />
                 <Route path="/auth/confirm" element={<ConfirmEmail />} />
-                
+
                 {/* Protected Routes */}
                 <Route element={<PrivateRoute />}>
                   <Route path="/" element={<Dashboard />} />

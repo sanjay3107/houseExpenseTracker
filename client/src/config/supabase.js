@@ -15,11 +15,11 @@ const options = {
     detectSessionInUrl: true, // This is critical for password reset flows
     flowType: 'pkce',
     storageKey: 'supabase-auth',
-    debug: true // Enable debug mode to see authentication logs
+    debug: true, // Enable debug mode to see authentication logs
   },
   global: {
     headers: {
-      'X-Client-Info': 'house-expense-tracker-client'
+      'X-Client-Info': 'house-expense-tracker-client',
     },
     // Custom fetch function that ignores SSL certificate issues
     // WARNING: Only use this in development, not in production!
@@ -33,18 +33,18 @@ const options = {
         credentials: 'include', // Changed from 'same-origin' to 'include' to allow cross-origin cookies
       };
       return fetch(url, customFetchOptions);
-    }
+    },
   },
   // Increase timeout for better reliability
   realtime: {
-    timeout: 60000
-  }
+    timeout: 60000,
+  },
 };
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, options);
 
 // Add a custom error handler
-supabase.handleError = (error) => {
+supabase.handleError = error => {
   console.error('Supabase Error:', error);
   return error;
 };

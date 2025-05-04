@@ -9,18 +9,18 @@ const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
   const { resetPassword, error, setError } = useAuth();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
-    
+
     try {
       const { error } = await resetPassword(email);
-      
+
       if (error) {
         throw new Error(error);
       }
-      
+
       // Show success message
       setMessage('Password reset instructions sent to your email');
     } catch (err) {
@@ -46,16 +46,16 @@ const ResetPassword = () => {
                   <Form.Control
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={e => setEmail(e.target.value)}
                     required
                   />
                   <Form.Text className="text-muted">
                     We'll send password reset instructions to this email
                   </Form.Text>
                 </Form.Group>
-                <Button 
-                  variant="primary" 
-                  type="submit" 
+                <Button
+                  variant="primary"
+                  type="submit"
                   className="w-100 py-2 mb-3"
                   disabled={loading}
                 >

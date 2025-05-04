@@ -11,31 +11,31 @@ const auth = require('../middleware/auth');
 router.post('/register', async (req, res) => {
   try {
     const { email, password, name } = req.body;
-    
+
     if (!email || !password || !name) {
       return res.status(400).json({ message: 'Please provide all required fields' });
     }
-    
+
     // Register user using Supabase Auth
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { 
+        data: {
           name,
-          created_at: new Date().toISOString()
-        }
-      }
+          created_at: new Date().toISOString(),
+        },
+      },
     });
-    
+
     if (error) {
       return res.status(400).json({ message: error.message });
     }
-    
+
     // Return success message
-    res.status(201).json({ 
+    res.status(201).json({
       message: 'Registration successful. Please check your email for verification.',
-      user: data.user
+      user: data.user,
     });
   } catch (err) {
     console.error('Registration error:', err);
@@ -51,25 +51,25 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     if (!email || !password) {
       return res.status(400).json({ message: 'Please provide email and password' });
     }
-    
+
     // Sign in with Supabase Auth
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
-      password
+      password,
     });
-    
+
     if (error) {
       return res.status(400).json({ message: error.message });
     }
-    
+
     // Return user data and token
     res.json({
       user: data.user,
-      session: data.session
+      session: data.session,
     });
   } catch (err) {
     console.error('Login error:', err);
@@ -101,18 +101,18 @@ router.post('/logout', auth, async (req, res) => {
   try {
     // Get the access token from the request
     const token = req.headers.authorization?.split('Bearer ')[1];
-    
+
     if (!token) {
       return res.status(401).json({ message: 'No token provided' });
     }
-    
+
     // Sign out with Supabase Auth
     const { error } = await supabase.auth.signOut();
-    
+
     if (error) {
       return res.status(400).json({ message: error.message });
     }
-    
+
     res.json({ message: 'Logged out successfully' });
   } catch (err) {
     console.error('Logout error:', err);
@@ -128,20 +128,20 @@ router.post('/logout', auth, async (req, res) => {
 router.post('/reset-password', async (req, res) => {
   try {
     const { email } = req.body;
-    
+
     if (!email) {
       return res.status(400).json({ message: 'Please provide an email address' });
     }
-    
+
     // Send password reset email
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${process.env.CLIENT_URL}/reset-password-confirm`
+      redirectTo: `${process.env.CLIENT_URL}/reset-password-confirm`,
     });
-    
+
     if (error) {
       return res.status(400).json({ message: error.message });
     }
-    
+
     res.json({ message: 'Password reset instructions sent to your email' });
   } catch (err) {
     console.error('Password reset error:', err);

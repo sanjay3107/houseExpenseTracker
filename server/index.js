@@ -19,13 +19,12 @@ app.use(express.json());
 
 // CORS configuration for production
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? [
-        'https://house-expense-tracker.vercel.app'
-      ]
-    : 'http://localhost:5178',
+  origin:
+    process.env.NODE_ENV === 'production'
+      ? ['https://house-expense-tracker.vercel.app']
+      : 'http://localhost:5178',
   credentials: true, // Allow cookies and authentication headers
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 
@@ -44,7 +43,9 @@ const testSupabaseConnection = async () => {
     return true;
   } catch (err) {
     console.error('Supabase connection error:', err);
-    console.log('Continuing with limited functionality. API endpoints will still work but may not be able to connect to Supabase.');
+    console.log(
+      'Continuing with limited functionality. API endpoints will still work but may not be able to connect to Supabase.'
+    );
     return false;
   }
 };

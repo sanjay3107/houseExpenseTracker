@@ -6,27 +6,27 @@ import { useAuth } from '../../context/AuthContext';
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
   });
   const [loading, setLoading] = useState(false);
   const { login, error, setError } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const { error } = await login(formData.email, formData.password);
-      
+
       if (error) {
         throw new Error(error);
       }
-      
+
       // Redirect to dashboard on successful login
       navigate('/dashboard');
     } catch (err) {
@@ -40,9 +40,13 @@ const Login = () => {
   return (
     <div className="d-flex justify-content-center align-items-center" style={{ height: '90vh' }}>
       <div style={{ width: '360px', maxWidth: '100%' }}>
-        <Form onSubmit={handleSubmit} className="bg-white p-4 shadow-sm border rounded" autoComplete="off">
+        <Form
+          onSubmit={handleSubmit}
+          className="bg-white p-4 shadow-sm border rounded"
+          autoComplete="off"
+        >
           {error && <Alert variant="danger">{error}</Alert>}
-          
+
           <Form.Group className="mb-3">
             <Form.Label>Email</Form.Label>
             <Form.Control
@@ -54,7 +58,7 @@ const Login = () => {
               autoComplete="new-email"
             />
           </Form.Group>
-          
+
           <Form.Group className="mb-3">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -66,16 +70,11 @@ const Login = () => {
               autoComplete="new-password"
             />
           </Form.Group>
-          
-          <Button 
-            variant="primary" 
-            type="submit" 
-            className="w-100 py-2 mb-3"
-            disabled={loading}
-          >
+
+          <Button variant="primary" type="submit" className="w-100 py-2 mb-3" disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </Button>
-          
+
           <div className="text-center">
             <Link to="/reset-password" className="d-block mb-2">
               Forgot password?

@@ -21,13 +21,13 @@ const ConfirmEmail = () => {
 
         if (type === 'email_confirmation' && accessToken) {
           setMessage('Your email has been confirmed! Redirecting to dashboard...');
-          
+
           // Set the session in Supabase manually
           await supabase.auth.setSession({
             access_token: accessToken,
-            refresh_token: refreshToken
+            refresh_token: refreshToken,
           });
-          
+
           // Wait a moment and redirect
           setTimeout(() => {
             navigate('/dashboard');
@@ -54,9 +54,9 @@ const ConfirmEmail = () => {
           <p className="mt-2">Processing email confirmation...</p>
         </div>
       )}
-      
+
       {error && <Alert variant="danger">{error}</Alert>}
-      
+
       {message && <Alert variant="success">{message}</Alert>}
     </Container>
   );

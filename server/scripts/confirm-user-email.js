@@ -14,18 +14,17 @@ async function confirmUserEmail(userId) {
 
   try {
     console.log(`Confirming email for user ID: ${userId}`);
-    
+
     // Update the user's email status
     // Note: This requires the service_role key, not the anon key
-    const { data, error } = await supabase.auth.admin.updateUserById(
-      userId,
-      { email_confirm: true }
-    );
-    
+    const { data, error } = await supabase.auth.admin.updateUserById(userId, {
+      email_confirm: true,
+    });
+
     if (error) {
       throw new Error(`Error confirming email: ${error.message}`);
     }
-    
+
     console.log('Email confirmed successfully!');
     console.log('User details:', data);
     return data;

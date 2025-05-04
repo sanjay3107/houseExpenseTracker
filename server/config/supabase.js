@@ -15,13 +15,13 @@ const options = {
   auth: {
     persistSession: false, // Don't persist the session to avoid cookie issues
     autoRefreshToken: true,
-    detectSessionInUrl: false
+    detectSessionInUrl: false,
   },
   global: {
     headers: {
-      'X-Client-Info': 'house-expense-tracker-server'
-    }
-  }
+      'X-Client-Info': 'house-expense-tracker-server',
+    },
+  },
 };
 
 // Create a custom fetch implementation that ignores SSL certificate issues
@@ -29,13 +29,13 @@ const options = {
 const https = require('https');
 const customFetch = require('cross-fetch');
 const httpsAgent = new https.Agent({
-  rejectUnauthorized: false // Ignore SSL certificate issues
+  rejectUnauthorized: false, // Ignore SSL certificate issues
 });
 
 const fetchWithoutSSLCheck = (url, options = {}) => {
   return customFetch(url, {
     ...options,
-    agent: httpsAgent
+    agent: httpsAgent,
   });
 };
 

@@ -14,20 +14,20 @@ async function getUserId(email) {
 
   try {
     console.log(`Looking up user with email: ${email}`);
-    
+
     // Use the admin API to find the user by email
     const { data, error } = await supabase.auth.admin.listUsers();
-    
+
     if (error) {
       throw new Error(`Error fetching users: ${error.message}`);
     }
-    
+
     const user = data.users.find(u => u.email === email);
-    
+
     if (!user) {
       throw new Error(`No user found with email: ${email}`);
     }
-    
+
     console.log('===============================');
     console.log(`User found: ${user.email}`);
     console.log(`User ID: ${user.id}`);
@@ -35,7 +35,7 @@ async function getUserId(email) {
     console.log('Use this ID in your migration command:');
     console.log(`node scripts/add-user-id-migration.js ${user.id}`);
     console.log('===============================');
-    
+
     return user.id;
   } catch (error) {
     console.error('Error:', error.message);

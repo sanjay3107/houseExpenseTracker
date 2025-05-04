@@ -11,9 +11,9 @@ const PrepaymentCalculator = () => {
     interestRate: '',
     loanTerm: '',
     prepaymentAmount: '',
-    prepaymentFrequency: 'monthly'
+    prepaymentFrequency: 'monthly',
   });
-  
+
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -24,7 +24,7 @@ const PrepaymentCalculator = () => {
     const fetchHouseDetails = async () => {
       try {
         const response = await axios.get(API_ENDPOINTS.HOUSE.DETAILS);
-        
+
         if (response.data && response.data.loanDetails) {
           setHouseDetails(response.data);
         }
@@ -33,22 +33,22 @@ const PrepaymentCalculator = () => {
         console.log('No house details found');
       }
     };
-    
+
     fetchHouseDetails();
   }, []);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     const { name, value } = e.target;
     let parsedValue = value;
-    
+
     // Convert lakh/crore notation to absolute numbers for loan and prepayment amounts
     if (name === 'loanAmount' || name === 'prepaymentAmount') {
       parsedValue = parseIndianAmount(value);
     }
-    
+
     setLoanDetails(prev => ({
       ...prev,
-      [name]: parsedValue
+      [name]: parsedValue,
     }));
   };
 
@@ -58,23 +58,23 @@ const PrepaymentCalculator = () => {
         ...prev,
         loanAmount: houseDetails.loanDetails.loanAmount,
         interestRate: houseDetails.loanDetails.interestRate,
-        loanTerm: houseDetails.loanDetails.loanTerm
+        loanTerm: houseDetails.loanDetails.loanTerm,
       }));
       setUseExistingLoan(true);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    
+
     try {
       setLoading(true);
       setError(null);
-      
+
       // Validate inputs
       if (
-        isNaN(loanDetails.loanAmount) || 
-        isNaN(loanDetails.interestRate) || 
+        isNaN(loanDetails.loanAmount) ||
+        isNaN(loanDetails.interestRate) ||
         isNaN(loanDetails.loanTerm) ||
         isNaN(loanDetails.prepaymentAmount) ||
         parseFloat(loanDetails.loanAmount) <= 0 ||
@@ -86,19 +86,16 @@ const PrepaymentCalculator = () => {
         setLoading(false);
         return;
       }
-      
+
       // Calculate prepayment impact
-      const response = await axios.post(
-        API_ENDPOINTS.LOAN.PREPAYMENT,
-        {
-          loanAmount: parseFloat(loanDetails.loanAmount),
-          interestRate: parseFloat(loanDetails.interestRate),
-          loanTerm: parseFloat(loanDetails.loanTerm),
-          prepaymentAmount: parseFloat(loanDetails.prepaymentAmount),
-          prepaymentFrequency: loanDetails.prepaymentFrequency
-        }
-      );
-      
+      const response = await axios.post(API_ENDPOINTS.LOAN.PREPAYMENT, {
+        loanAmount: parseFloat(loanDetails.loanAmount),
+        interestRate: parseFloat(loanDetails.interestRate),
+        loanTerm: parseFloat(loanDetails.loanTerm),
+        prepaymentAmount: parseFloat(loanDetails.prepaymentAmount),
+        prepaymentFrequency: loanDetails.prepaymentFrequency,
+      });
+
       setResults(response.data);
       setLoading(false);
     } catch (err) {
@@ -111,35 +108,35 @@ const PrepaymentCalculator = () => {
   // Prepare chart data for balance comparison
   const getChartData = () => {
     if (!results) return null;
-    
+
     const regularSchedule = Array.from({ length: results.regularLoan.termMonths }, (_, i) => {
       const month = i + 1;
       // Simple linear approximation for regular schedule
       return results.regularLoan.totalPayment * (1 - month / results.regularLoan.termMonths);
     });
-    
+
     const prepaymentSchedule = results.prepaymentSchedule.map(payment => payment.balance);
-    
+
     // Extend prepayment schedule to match regular schedule length for proper comparison
     const extendedPrepaymentSchedule = [
       ...prepaymentSchedule,
-      ...Array(Math.max(0, regularSchedule.length - prepaymentSchedule.length)).fill(0)
+      ...Array(Math.max(0, regularSchedule.length - prepaymentSchedule.length)).fill(0),
     ];
-    
+
     // Group by year for better visualization
     const years = Math.ceil(regularSchedule.length / 12);
     const yearLabels = Array.from({ length: years }, (_, i) => `Year ${i + 1}`);
-    
+
     const regularYearlyData = Array.from({ length: years }, (_, i) => {
       const yearIndex = i * 12;
       return regularSchedule[Math.min(yearIndex, regularSchedule.length - 1)];
     });
-    
+
     const prepaymentYearlyData = Array.from({ length: years }, (_, i) => {
       const yearIndex = i * 12;
       return extendedPrepaymentSchedule[Math.min(yearIndex, extendedPrepaymentSchedule.length - 1)];
     });
-    
+
     return {
       labels: yearLabels,
       datasets: [
@@ -167,42 +164,42 @@ const PrepaymentCalculator = () => {
       },
       title: {
         display: true,
-        text: 'Loan Balance Over Time'
+        text: 'Loan Balance Over Time',
       },
       tooltip: {
         callbacks: {
-          label: function(context) {
+          label: function (context) {
             return `${context.dataset.label}: ${formatIndianCurrency(context.raw)}`;
-          }
-        }
-      }
+          },
+        },
+      },
     },
     scales: {
       x: {
         title: {
           display: true,
-          text: 'Years'
-        }
+          text: 'Years',
+        },
       },
       y: {
         title: {
           display: true,
-          text: 'Remaining Balance (₹)'
+          text: 'Remaining Balance (₹)',
         },
         ticks: {
-          callback: function(value) {
+          callback: function (value) {
             return formatIndianCurrency(value, { abbreviate: true });
-          }
-        }
-      }
-    }
+          },
+        },
+      },
+    },
   };
 
   return (
     <div className="container-fluid py-4 px-4">
       <h1 className="mb-4">Prepayment Calculator</h1>
       {error && <Alert variant="danger">{error}</Alert>}
-      
+
       <Row className="g-4">
         <Col lg={4} md={12}>
           <Card className="shadow-sm border-0">
@@ -211,16 +208,12 @@ const PrepaymentCalculator = () => {
               {houseDetails && houseDetails.loanDetails && !useExistingLoan && (
                 <Alert variant="info" className="mb-3">
                   You have existing loan details in your house profile.
-                  <Button 
-                    variant="link" 
-                    className="p-0 ms-2" 
-                    onClick={handleUseExistingLoan}
-                  >
+                  <Button variant="link" className="p-0 ms-2" onClick={handleUseExistingLoan}>
                     Use these details
                   </Button>
                 </Alert>
               )}
-              
+
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
                   <Form.Label>Loan Amount (₹)</Form.Label>
@@ -236,7 +229,7 @@ const PrepaymentCalculator = () => {
                     required
                   />
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3">
                   <Form.Label>Interest Rate (%)</Form.Label>
                   <Form.Control
@@ -250,7 +243,7 @@ const PrepaymentCalculator = () => {
                     required
                   />
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3">
                   <Form.Label>Loan Term (years)</Form.Label>
                   <Form.Control
@@ -264,7 +257,7 @@ const PrepaymentCalculator = () => {
                     required
                   />
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3">
                   <Form.Label>Prepayment Amount (₹)</Form.Label>
                   <Form.Text className="text-muted d-block mb-1">
@@ -279,7 +272,7 @@ const PrepaymentCalculator = () => {
                     required
                   />
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3">
                   <Form.Label>Prepayment Frequency</Form.Label>
                   <Form.Select
@@ -293,24 +286,25 @@ const PrepaymentCalculator = () => {
                     <option value="one-time">One-time</option>
                   </Form.Select>
                 </Form.Group>
-                
-                <Button 
-                  variant="primary" 
-                  type="submit" 
-                  className="w-100 py-2"
-                  disabled={loading}
-                >
+
+                <Button variant="primary" type="submit" className="w-100 py-2" disabled={loading}>
                   {loading ? (
                     <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
                       Calculating...
                     </>
-                  ) : 'Calculate'}
+                  ) : (
+                    'Calculate'
+                  )}
                 </Button>
               </Form>
             </Card.Body>
           </Card>
-          
+
           {results && (
             <Card className="mt-4 shadow-sm border-0">
               <Card.Header className="bg-primary text-white">Prepayment Impact</Card.Header>
@@ -318,20 +312,26 @@ const PrepaymentCalculator = () => {
                 <div className="mb-4 p-3 bg-light rounded">
                   <h6 className="text-muted mb-2">Time Saved</h6>
                   <h3 className="text-success mb-0">
-                    {Math.floor(results.withPrepayment.timeShortened / 12)} years, {results.withPrepayment.timeShortened % 12} months
+                    {Math.floor(results.withPrepayment.timeShortened / 12)} years,{' '}
+                    {results.withPrepayment.timeShortened % 12} months
                   </h3>
                 </div>
-                
+
                 <div className="mb-4 p-3 bg-light rounded">
                   <h6 className="text-muted mb-2">Interest Saved</h6>
                   <h3 className="text-primary mb-0">
                     {formatIndianCurrency(results.withPrepayment.interestSaved)}
                   </h3>
                   <small className="text-muted mt-2 d-block">
-                    That's {((results.withPrepayment.interestSaved / results.regularLoan.totalInterest) * 100).toFixed(1)}% of total interest
+                    That's{' '}
+                    {(
+                      (results.withPrepayment.interestSaved / results.regularLoan.totalInterest) *
+                      100
+                    ).toFixed(1)}
+                    % of total interest
                   </small>
                 </div>
-                
+
                 <Table bordered size="sm" className="mt-3">
                   <thead>
                     <tr>
@@ -358,8 +358,14 @@ const PrepaymentCalculator = () => {
                     </tr>
                     <tr>
                       <td>Loan Term</td>
-                      <td>{Math.floor(results.regularLoan.termMonths / 12)} years, {results.regularLoan.termMonths % 12} months</td>
-                      <td>{Math.floor(results.withPrepayment.termMonths / 12)} years, {results.withPrepayment.termMonths % 12} months</td>
+                      <td>
+                        {Math.floor(results.regularLoan.termMonths / 12)} years,{' '}
+                        {results.regularLoan.termMonths % 12} months
+                      </td>
+                      <td>
+                        {Math.floor(results.withPrepayment.termMonths / 12)} years,{' '}
+                        {results.withPrepayment.termMonths % 12} months
+                      </td>
                     </tr>
                   </tbody>
                 </Table>
@@ -367,7 +373,7 @@ const PrepaymentCalculator = () => {
             </Card>
           )}
         </Col>
-        
+
         <Col lg={8} md={12}>
           {results && (
             <>
@@ -379,7 +385,7 @@ const PrepaymentCalculator = () => {
                   </div>
                 </Card.Body>
               </Card>
-              
+
               <Card className="shadow-sm border-0">
                 <Card.Header className="bg-primary text-white">Prepayment Schedule</Card.Header>
                 <Card.Body>
@@ -409,11 +415,12 @@ const PrepaymentCalculator = () => {
                       </tbody>
                     </Table>
                   </div>
-                  
+
                   {results.prepaymentSchedule.length > 12 && (
                     <div className="text-center mt-3">
                       <small className="text-muted">
-                        Showing first year of payments. Full schedule has {results.prepaymentSchedule.length} payments.
+                        Showing first year of payments. Full schedule has{' '}
+                        {results.prepaymentSchedule.length} payments.
                       </small>
                     </div>
                   )}

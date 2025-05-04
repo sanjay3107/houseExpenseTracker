@@ -24,11 +24,11 @@ const ExpenseList = () => {
       setLoading(true);
       const response = await axios.get(API_ENDPOINTS.EXPENSES.ALL);
       setExpenses(response.data);
-      
+
       // Calculate total amount
       const total = response.data.reduce((sum, expense) => sum + expense.amount, 0);
       setTotalAmount(total);
-      
+
       setLoading(false);
     } catch (err) {
       setError('Error fetching expenses. Please try again later.');
@@ -37,12 +37,12 @@ const ExpenseList = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async id => {
     if (!id) {
       setError('Invalid expense ID. Cannot delete this expense.');
       return;
     }
-    
+
     if (window.confirm('Are you sure you want to delete this expense?')) {
       try {
         await axios.delete(`${API_ENDPOINTS.EXPENSES.ALL}/${id}`);
@@ -55,7 +55,7 @@ const ExpenseList = () => {
     }
   };
 
-  const handleSort = (field) => {
+  const handleSort = field => {
     if (sortField === field) {
       // Toggle sort direction if clicking the same field
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -66,15 +66,15 @@ const ExpenseList = () => {
     }
   };
 
-  const getCategoryBadgeVariant = (category) => {
+  const getCategoryBadgeVariant = category => {
     const variants = {
-      'Purchase': 'primary',
-      'Renovation': 'success',
-      'Maintenance': 'warning',
-      'Tax': 'danger',
-      'Insurance': 'info',
-      'Utility': 'secondary',
-      'Other': 'dark'
+      Purchase: 'primary',
+      Renovation: 'success',
+      Maintenance: 'warning',
+      Tax: 'danger',
+      Insurance: 'info',
+      Utility: 'secondary',
+      Other: 'dark',
     };
     return variants[category] || 'light';
   };
@@ -88,7 +88,7 @@ const ExpenseList = () => {
     })
     .sort((a, b) => {
       let comparison = 0;
-      
+
       if (sortField === 'date') {
         comparison = new Date(a.date) - new Date(b.date);
       } else if (sortField === 'amount') {
@@ -98,7 +98,7 @@ const ExpenseList = () => {
       } else if (sortField === 'description') {
         comparison = a.description.localeCompare(b.description);
       }
-      
+
       return sortDirection === 'asc' ? comparison : -comparison;
     });
 
@@ -117,9 +117,9 @@ const ExpenseList = () => {
           <Button variant="primary">Add New Expense</Button>
         </Link>
       </div>
-      
+
       {error && <Alert variant="danger">{error}</Alert>}
-      
+
       <Card className="mb-4">
         <Card.Body>
           <Row>
@@ -150,7 +150,7 @@ const ExpenseList = () => {
           </Row>
         </Card.Body>
       </Card>
-      
+
       <Card className="mb-4">
         <Card.Body>
           <Row className="mb-3">
@@ -162,15 +162,12 @@ const ExpenseList = () => {
                 <Form.Control
                   placeholder="Search expenses..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                 />
               </InputGroup>
             </Col>
             <Col md={6}>
-              <Form.Select 
-                value={filterCategory} 
-                onChange={(e) => setFilterCategory(e.target.value)}
-              >
+              <Form.Select value={filterCategory} onChange={e => setFilterCategory(e.target.value)}>
                 <option value="">All Categories</option>
                 <option value="Purchase">Purchase</option>
                 <option value="Renovation">Renovation</option>
@@ -182,7 +179,7 @@ const ExpenseList = () => {
               </Form.Select>
             </Col>
           </Row>
-          
+
           {filteredAndSortedExpenses.length > 0 ? (
             <div className="table-responsive">
               <Table striped hover>
@@ -195,7 +192,8 @@ const ExpenseList = () => {
                       Category {sortField === 'category' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </th>
                     <th onClick={() => handleSort('description')} style={{ cursor: 'pointer' }}>
-                      Description {sortField === 'description' && (sortDirection === 'asc' ? '↑' : '↓')}
+                      Description{' '}
+                      {sortField === 'description' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </th>
                     <th onClick={() => handleSort('amount')} style={{ cursor: 'pointer' }}>
                       Amount {sortField === 'amount' && (sortDirection === 'asc' ? '↑' : '↓')}
@@ -219,10 +217,12 @@ const ExpenseList = () => {
                       <td>
                         <div className="d-flex">
                           <Link to={`/expenses/edit/${expense.id || expense._id}`} className="me-2">
-                            <Button variant="outline-primary" size="sm">Edit</Button>
+                            <Button variant="outline-primary" size="sm">
+                              Edit
+                            </Button>
                           </Link>
-                          <Button 
-                            variant="outline-danger" 
+                          <Button
+                            variant="outline-danger"
                             size="sm"
                             onClick={() => handleDelete(expense.id || expense._id)}
                           >
@@ -237,9 +237,9 @@ const ExpenseList = () => {
             </div>
           ) : (
             <Alert variant="info">
-              {expenses.length === 0 
-                ? "You haven't added any expenses yet." 
-                : "No expenses match your search criteria."}
+              {expenses.length === 0
+                ? "You haven't added any expenses yet."
+                : 'No expenses match your search criteria.'}
             </Alert>
           )}
         </Card.Body>

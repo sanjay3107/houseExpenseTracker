@@ -13,21 +13,21 @@ export const formatIndianCurrency = (amount, showCurrency = true, showWords = tr
   if (amount === undefined || amount === null || isNaN(amount)) {
     return 'N/A';
   }
-  
+
   // Convert to number if it's a string
   const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-  
+
   // Format the number in Indian format (commas at thousands, lakhs, crores)
   const formatter = new Intl.NumberFormat('en-IN', {
     maximumFractionDigits: 2,
-    minimumFractionDigits: 0
+    minimumFractionDigits: 0,
   });
-  
+
   const formattedAmount = formatter.format(numAmount);
-  
+
   // Add currency symbol if requested
   const withCurrency = showCurrency ? `₹${formattedAmount}` : formattedAmount;
-  
+
   // Add words (lakhs/crores) if requested and amount is large enough
   if (showWords && numAmount >= 1000) {
     if (numAmount >= 10000000) {
@@ -44,7 +44,7 @@ export const formatIndianCurrency = (amount, showCurrency = true, showWords = tr
       return `${withCurrency} (${thousands.toFixed(2)} K)`;
     }
   }
-  
+
   return withCurrency;
 };
 
@@ -53,28 +53,28 @@ export const formatIndianCurrency = (amount, showCurrency = true, showWords = tr
  * @param {string} value - The input value (e.g., "60L", "1.5Cr", "1000000")
  * @returns {number} The absolute number
  */
-export const parseIndianAmount = (value) => {
+export const parseIndianAmount = value => {
   if (!value) return 0;
-  
+
   const str = value.toString().trim().toUpperCase();
-  
+
   // Handle crore amounts (e.g., "1.5CR" or "1.5C")
   if (str.endsWith('CR') || str.endsWith('C')) {
     const num = parseFloat(str.replace(/CR|C/i, ''));
     return num * 10000000; // 1 crore = 10000000
   }
-  
+
   // Handle lakh amounts (e.g., "60L")
   if (str.endsWith('L')) {
     const num = parseFloat(str.replace(/L/i, ''));
     return num * 100000; // 1 lakh = 100000
   }
-  
+
   // Handle numeric input
   return parseFloat(str.replace(/[^0-9.]/g, '')) || 0;
 };
 
 export default {
   formatIndianCurrency,
-  parseIndianAmount
+  parseIndianAmount,
 };
