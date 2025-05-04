@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert, Container, Row, Col } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import 'animate.css';
 
 // Get Supabase credentials directly
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -106,15 +104,13 @@ const ResetPasswordConfirm = () => {
             <Card.Body className="p-4">
               <h2 className="text-center mb-4">Reset Your Password</h2>
               {error && (
-                <Alert variant="danger" className="animate__animated animate__fadeIn">
-                  <i className="bi bi-exclamation-triangle-fill me-2"></i>
-                  {error}
+                <Alert variant="danger">
+                  ⚠️ {error}
                 </Alert>
               )}
               {message && (
-                <Alert variant="success" className="animate__animated animate__fadeIn">
-                  <i className="bi bi-check-circle-fill me-2"></i>
-                  {message}
+                <Alert variant="success">
+                  ✅ {message}
                   <div className="mt-2 small text-muted">
                     Redirecting to login page in a few seconds...
                   </div>
